@@ -9,11 +9,14 @@ export class UsersService {
     }
 
     create(email: string, password: string, name: string) {
-        const user = this.repo.create({email, password, name})
+        const initialCredits = 200
+        const user = this.repo.create({email, password, name, credits: initialCredits})
         return this.repo.save(user)
     }
 
     find(email: string) {
         return this.repo.findOne({where: {email}})
     }
+
+
 }

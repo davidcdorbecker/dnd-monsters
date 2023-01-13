@@ -1,4 +1,6 @@
-import {AfterInsert, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {AfterInsert, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {UserMonsters} from "./user_monsters.entity";
+import {Transaction} from "../transactions/transaction.entity";
 
 @Entity()
 export class User {
@@ -13,6 +15,12 @@ export class User {
 
     @Column()
     name: string
+
+    @Column()
+    credits: number
+
+    @OneToMany(() => UserMonsters, userMonsters => userMonsters.user) monsters: UserMonsters[]
+    @OneToMany(() => Transaction, transaction => transaction.user) transactions: Transaction[]
 
     @AfterInsert()
     logInsert() {

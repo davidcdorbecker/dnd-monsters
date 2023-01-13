@@ -5,6 +5,11 @@ import {TypeOrmModule} from '@nestjs/typeorm'
 import {APP_PIPE} from "@nestjs/core";
 import {User} from "./auth/user.entity";
 import {UsersModule} from "./auth/users.module";
+import {TransactionsModule} from './transactions/transactions.module';
+import {ConfigModule} from "@nestjs/config";
+import {Transaction} from "./transactions/transaction.entity";
+import {ClientsModule, Transport} from "@nestjs/microservices";
+import {UserMonsters} from "./auth/user_monsters.entity";
 
 @Module({
     imports: [
@@ -15,13 +20,26 @@ import {UsersModule} from "./auth/users.module";
             port: 3306,
             username: 'root',
             password: 'secret',
-            entities: [User],
+            entities: [User, Transaction, UserMonsters],
             synchronize: true
         }),
-        UsersModule
+        UsersModule,
+        TransactionsModule,
+        ConfigModule.forRoot({isGlobal: true}),
+        ClientsModule.register([
+            {
+                name: 'KAFKA_CONSUMER',
+                transport: Transport.KAFKA,
+                options: {
+                    client: {
+                        brokers: ['localhost:9092']
+                    }
+                }
+            }
+        ])
     ],
     controllers: [AppController],
-    providers: [AppService,   {
+    providers: [AppService, {
         provide: APP_PIPE,
         useValue: new ValidationPipe({
             whitelist: true,

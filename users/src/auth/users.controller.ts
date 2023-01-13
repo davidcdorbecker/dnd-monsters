@@ -14,7 +14,7 @@ export class UsersController {
     }
 
     @Post('/signup')
-    signup(@Body() body: CreateUserDTO, @Session() session: any) {
+    signup(@Body() body: CreateUserDTO) {
         const {name, email, password} = body
         return this.authService.signup(email, password, name)
     }
