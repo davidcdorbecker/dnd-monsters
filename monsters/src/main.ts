@@ -8,9 +8,6 @@ async function bootstrap() {
         new ValidationPipe(),
     );
 
-    const microservice = app.connectMicroservice({
-    });
-    await app.startAllMicroservices()
     await app.listen(8001);
 }
 

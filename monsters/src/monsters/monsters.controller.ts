@@ -1,11 +1,22 @@
-import {Controller, Get, NotFoundException, Param, Post} from '@nestjs/common';
+import {
+    CACHE_MANAGER,
+    CacheInterceptor, CacheKey,
+    CacheTTL,
+    Controller,
+    Get, Inject,
+    NotFoundException,
+    Param,
+    Post,
+    UseInterceptors
+} from '@nestjs/common';
 import {MonstersService} from "./monsters.service";
 import {Types} from "mongoose";
 
+@UseInterceptors(CacheInterceptor)
 @Controller('monsters')
 export class MonstersController {
     constructor(
-        private monstersService: MonstersService
+        private readonly monstersService: MonstersService
     ) {
     }
 
@@ -14,6 +25,7 @@ export class MonstersController {
         const monsters = await this.monstersService.getFromAPI()
         return this.monstersService.create(monsters)
     }
+
 
     @Get('/:id')
     async findMonster(@Param('id') id: string) {
