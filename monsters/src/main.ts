@@ -7,7 +7,11 @@ async function bootstrap() {
     app.useGlobalPipes(
         new ValidationPipe(),
     );
-    await app.listen(3000);
+
+    const microservice = app.connectMicroservice({
+    });
+    await app.startAllMicroservices()
+    await app.listen(8001);
 }
 
 bootstrap();

@@ -23,6 +23,7 @@
     "@nestjs/axios": "^1.0.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/microservices": "^9.2.1",
     "@nestjs/platform-express": "^9.0.0",
     "axios": "^1.2.2",
     "class-transformer": "^0.5.1",
