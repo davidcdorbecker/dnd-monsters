@@ -34,11 +34,24 @@ export class MonstersService {
             .map(x => new this.monsterModel(x.value.data))
     }
 
-    create(monsters: Monster[]) {
+    async replace(monsters: Monster[]) {
+        await this.monsterModel.deleteMany({})
         this.monsterModel.bulkSave(monsters)
     }
 
     findOne(objectId: Types.ObjectId) {
         return this.monsterModel.findById(objectId)
+    }
+
+    minMaxChallengeRating() {
+        return this.monsterModel.aggregate([
+            {
+                '$group': {
+                    "_id": null,
+                    "max": {"$max": "$challenge_rating"},
+                    "min": {"$min": "$challenge_rating"}
+                }
+            }
+        ])
     }
 }
