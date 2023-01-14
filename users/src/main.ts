@@ -13,7 +13,7 @@ async function bootstrap() {
     }
   })
 
-  await app.listen(8002)
+  await app.listen(+process.env.SERVER_PORT)
   await app.startAllMicroservices()
 }
 bootstrap();

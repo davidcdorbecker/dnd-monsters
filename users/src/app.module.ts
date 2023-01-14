@@ -6,20 +6,24 @@ import {APP_PIPE} from "@nestjs/core";
 import {User} from "./auth/user.entity";
 import {UsersModule} from "./auth/users.module";
 import {TransactionsModule} from './transactions/transactions.module';
-import {ConfigModule} from "@nestjs/config";
+import {ConfigModule, ConfigService} from "@nestjs/config";
 import {Transaction} from "./transactions/transaction.entity";
 import {UserMonsters} from "./auth/user_monsters.entity";
 
 @Module({
     imports: [
-        TypeOrmModule.forRoot({
-            type: 'postgres',
-            host: process.env.POSTGRES_HOST,
-            port: 5432,
-            username: process.env.POSTGRES_USERNAME,
-            password: process.env.POSTGRES_PASSWORD,
-            entities: [User, Transaction, UserMonsters],
-            synchronize: true
+        TypeOrmModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                type: 'postgres',
+                host: configService.get('POSTGRES_HOST'),
+                port: 5432,
+                username: configService.get('POSTGRES_USERNAME'),
+                password: configService.get('POSTGRES_PASSWORD'),
+                entities: [User, Transaction, UserMonsters],
+                synchronize: true
+            })
         }),
         UsersModule,
         TransactionsModule,
