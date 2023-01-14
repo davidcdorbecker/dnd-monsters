@@ -1,10 +1,11 @@
 import {Inject, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Transaction} from "./transaction.entity";
-import {Connection, ConnectionManager, getConnectionManager, Repository} from "typeorm";
+import {Connection, ConnectionManager, getConnectionManager, LessThan, MoreThan, Repository} from "typeorm";
 import {UserMonsters} from "../users/user_monsters.entity";
 import {User} from "../users/user.entity";
 import {UsersService} from "../users/users.service";
+import * as moment from "moment";
 
 @Injectable()
 export class TransactionsService {
@@ -29,6 +30,10 @@ export class TransactionsService {
             status: 'PENDING'
         })
         return this.transactionsRepo.save(transaction)
+    }
+
+    getPendingTransactions() {
+        return this.transactionsRepo.manager.createQueryBuilder(Transaction, 't').where(`t.status='PENDING' AND t.created_at < NOW() - INTERVAL '1 minute'`).getMany()
     }
 
     async process(transaction_id: number, monster_id: string) {

@@ -1,4 +1,4 @@
-import {Body, Controller, Post, Req, Session, UseGuards, ValidationPipe} from '@nestjs/common';
+import {Body, Controller, Get, Post, Req, Session, UseGuards, ValidationPipe} from '@nestjs/common';
 import {TransactionsService} from "./transactions.service";
 import {CreateTransactionDTO} from "./dtos/create_transaction";
 import {AuthGuard} from "@nestjs/passport";
@@ -18,6 +18,11 @@ export class TransactionsController {
     async doTransaction(@Req() {user}, @Body() body: CreateTransactionDTO) {
         const {id} = user
         return await this.transactionsService.create(id, body.egg_level, body.credits)
+    }
+
+    @Get('/pending-transactions')
+    async getPendingTransactions() {
+        return await this.transactionsService.getPendingTransactions()
     }
 
     @MessagePattern('finalize-transaction')
