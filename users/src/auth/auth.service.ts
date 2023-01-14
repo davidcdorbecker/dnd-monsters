@@ -33,7 +33,7 @@ export class AuthService {
         return null;
     }
 
-    async checkUser(email: string): Promise<boolean> {
+    async checkUser(email: string)/*: Promise<boolean>*/ {
         const user = await this.usersService.find(email)
         return !!user
     }

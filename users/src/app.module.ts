@@ -8,35 +8,22 @@ import {UsersModule} from "./auth/users.module";
 import {TransactionsModule} from './transactions/transactions.module';
 import {ConfigModule} from "@nestjs/config";
 import {Transaction} from "./transactions/transaction.entity";
-import {ClientsModule, Transport} from "@nestjs/microservices";
 import {UserMonsters} from "./auth/user_monsters.entity";
 
 @Module({
     imports: [
         TypeOrmModule.forRoot({
-            type: 'mysql',
-            database: 'users',
-            host: `${!process.env.environment ? 'localhost' : 'mysql'}`,
-            port: 3306,
-            username: 'root',
-            password: 'secret',
+            type: 'postgres',
+            host: process.env.POSTGRES_HOST,
+            port: 5432,
+            username: process.env.POSTGRES_USERNAME,
+            password: process.env.POSTGRES_PASSWORD,
             entities: [User, Transaction, UserMonsters],
             synchronize: true
         }),
         UsersModule,
         TransactionsModule,
-        ConfigModule.forRoot({isGlobal: true}),
-        ClientsModule.register([
-            {
-                name: 'KAFKA_CONSUMER',
-                transport: Transport.KAFKA,
-                options: {
-                    client: {
-                        brokers: ['localhost:9092']
-                    }
-                }
-            }
-        ])
+        ConfigModule.forRoot({isGlobal: true})
     ],
     controllers: [AppController],
     providers: [AppService, {

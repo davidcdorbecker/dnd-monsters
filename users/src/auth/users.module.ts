@@ -8,9 +8,10 @@ import {LocalStrategy} from "./strategies/local.strategy";
 import {PassportModule} from "@nestjs/passport";
 import {JwtModule} from "@nestjs/jwt";
 import {JwtStrategy} from "./strategies/jwt.strategy";
-import {jwtConstants} from "../constants";
 import {ConfigService} from "@nestjs/config";
 import {UserMonsters} from "./user_monsters.entity";
+
+console.log(process.env)
 
 @Module({
     controllers: [UsersController],
@@ -21,7 +22,7 @@ import {UserMonsters} from "./user_monsters.entity";
         JwtModule.registerAsync({
             inject: [ConfigService],
             useFactory: async (configService: ConfigService) => ({
-                secret: configService.get(jwtConstants.secret),
+                secret: configService.get(`JWT_SECRET`),
                 signOptions: {expiresIn: '1h'},
             })
         })

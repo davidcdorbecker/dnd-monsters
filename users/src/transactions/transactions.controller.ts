@@ -20,9 +20,14 @@ export class TransactionsController {
         return await this.transactionsService.create(id, body.egg_level, body.credits)
     }
 
-    @MessagePattern('test-topic')
-    async readMessage(@Payload(ValidationPipe) message: any) {
+    @MessagePattern('finalize-transaction')
+    async readMessage(@Payload() message: ProcessTransactionDTO) {
         const {transaction_id, monster_id} = message
-        return await this.transactionsService.process(transaction_id, monster_id)
+        try {
+            await this.transactionsService.process(transaction_id, monster_id)
+            console.log(`transaction ${transaction_id} successfully processed `)
+        } catch (e) {
+            console.error(`transaction ${transaction_id} failed | error:${e}`)
+        }
     }
 }

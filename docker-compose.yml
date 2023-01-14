@@ -1,35 +1,104 @@
+networks:
+  app-net:
+    driver: bridge
+
 services:
 
-  monsters:
-    image: monsters-api
-    container_name: monsters-api
-    build:
-      context: ./monsters
+#  monsters:
+#    image: monsters-api
+#    container_name: monsters-api
+#    build:
+#      context: ./monsters
+#    ports:
+#      - 8001:8001
+#    environment:
+#      - SERVER_PORT=8080
+#      - environment=dev
+#    volumes:
+#      - ./tmp/npm:/root/.npm:z
+#      - ./monsters/src:/usr/src/app/src:z
+#    depends_on:
+#      - mongo
+#      - redis
+#
+#  mongo:
+#    image: mongo:latest
+#    ports:
+#      - 27017:27017
+#    container_name: monsters-db
+#    volumes:
+#      - ~/mongo/data:/data/db
+#
+#  redis:
+#    container_name: cache
+#    restart: always
+#    image: redis:latest
+#    ports:
+#      - 6379:6379
+#    volumes:
+#      - ~/cache:/data
+
+  zookeeper:
+    image: 'docker.io/bitnami/zookeeper:3-debian-10'
     ports:
-      - 8001:8001
+      - 2181:2181
     environment:
-      - SERVER_PORT=8080
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - app-net
+  kafka:
+    image: 'docker.io/bitnami/kafka:2-debian-10'
+    ports:
+      - 9092:9092
+      - 9093:9093
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://kafka:9093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
+    depends_on:
+      - zookeeper
+    networks:
+      - app-net
+
+  postgres:
+    image: 'postgres:latest'
+    restart: always
+    volumes:
+      - ~/postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=secret
+    ports:
+      - 5432:5432
+    networks:
+      - app-net
+
+  users:
+    image: users-api
+    container_name: users-api
+    build:
+      context: ./users
+    ports:
+      - 8002:8002
+    environment:
+      - SERVER_PORT=8002
       - environment=dev
+      - JWT_SECRET=secret
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_USERNAME=postgres
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9093
     volumes:
       - ./tmp/npm:/root/.npm:z
       - ./monsters/src:/usr/src/app/src:z
     depends_on:
-      - mongo
-      - redis
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - 27017:27017
-    container_name: monsters-db
-    volumes:
-      - ~/mongo/data:/data/db
-
-  redis:
-    container_name: cache
-    restart: always
-    image: redis:latest
-    ports:
-      - 6379:6379
-    volumes:
-      - ~/cache:/data
+      - zookeeper
+      - kafka
+      - postgres
+    networks:
+      - app-net

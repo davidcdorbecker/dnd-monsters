@@ -32,6 +32,7 @@ export class TransactionsService {
     }
 
     async process(transaction_id: number, monster_id: string) {
+        console.log('success')
         const queryRunner = this.connection.createQueryRunner()
         await queryRunner.startTransaction()
 
