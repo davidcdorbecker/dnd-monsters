@@ -2,9 +2,9 @@ import {Inject, Injectable, InternalServerErrorException, NotFoundException} fro
 import {InjectRepository} from "@nestjs/typeorm";
 import {Transaction} from "./transaction.entity";
 import {Connection, ConnectionManager, getConnectionManager, Repository} from "typeorm";
-import {UsersService} from "../auth/users.service";
-import {UserMonsters} from "../auth/user_monsters.entity";
-import {User} from "../auth/user.entity";
+import {UserMonsters} from "../users/user_monsters.entity";
+import {User} from "../users/user.entity";
+import {UsersService} from "../users/users.service";
 
 @Injectable()
 export class TransactionsService {

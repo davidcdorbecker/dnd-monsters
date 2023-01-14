@@ -1,5 +1,5 @@
 import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
-import {User} from "../auth/user.entity";
+import {User} from "../users/user.entity";
 
 type status = 'BORN' | 'PENDING'
 

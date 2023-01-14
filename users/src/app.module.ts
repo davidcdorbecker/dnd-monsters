@@ -3,12 +3,13 @@ import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {TypeOrmModule} from '@nestjs/typeorm'
 import {APP_PIPE} from "@nestjs/core";
-import {User} from "./auth/user.entity";
-import {UsersModule} from "./auth/users.module";
+import {User} from "./users/user.entity";
+import {AuthModule} from "./auth/auth.module";
 import {TransactionsModule} from './transactions/transactions.module';
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {Transaction} from "./transactions/transaction.entity";
-import {UserMonsters} from "./auth/user_monsters.entity";
+import {UserMonsters} from "./users/user_monsters.entity";
+import {UsersModule} from './users/users.module';
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import {UserMonsters} from "./auth/user_monsters.entity";
             })
         }),
         UsersModule,
+        AuthModule,
         TransactionsModule,
         ConfigModule.forRoot({isGlobal: true})
     ],

@@ -1,23 +1,19 @@
 import {Module} from '@nestjs/common';
-import {UsersController} from './users.controller';
+import {AuthController} from './auth.controller';
 import {AuthService} from './auth.service';
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {User} from "./user.entity";
-import {UsersService} from "./users.service";
 import {LocalStrategy} from "./strategies/local.strategy";
 import {PassportModule} from "@nestjs/passport";
 import {JwtModule} from "@nestjs/jwt";
 import {JwtStrategy} from "./strategies/jwt.strategy";
 import {ConfigService} from "@nestjs/config";
-import {UserMonsters} from "./user_monsters.entity";
-
-console.log(process.env)
+import {UsersService} from "../users/users.service";
+import {TypeOrmModule} from "@nestjs/typeorm";
+import {User} from "../users/user.entity";
 
 @Module({
-    controllers: [UsersController],
+    controllers: [AuthController],
     providers: [AuthService, UsersService, LocalStrategy, JwtStrategy],
     imports: [
-        TypeOrmModule.forFeature([User, UserMonsters]),
         PassportModule,
         JwtModule.registerAsync({
             inject: [ConfigService],
@@ -25,9 +21,10 @@ console.log(process.env)
                 secret: configService.get(`JWT_SECRET`),
                 signOptions: {expiresIn: '1h'},
             })
-        })
+        }),
+        TypeOrmModule.forFeature([User])
     ],
-    exports: [AuthService, UsersService]
+    exports: [AuthService]
 })
-export class UsersModule {
+export class AuthModule {
 }
