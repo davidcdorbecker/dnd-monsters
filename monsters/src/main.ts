@@ -8,7 +8,7 @@ async function bootstrap() {
         new ValidationPipe(),
     );
 
-    await app.listen(8001);
+    await app.listen(+process.env.SERVER_PORT);
 }
 
 bootstrap();
