@@ -20,7 +20,7 @@ export class TransactionsController {
         return await this.transactionsService.create(id, body.egg_level, body.credits)
     }
 
-    @Get('/pending-transactions')
+    @Get('/pending')
     async getPendingTransactions() {
         return await this.transactionsService.getPendingTransactions()
     }

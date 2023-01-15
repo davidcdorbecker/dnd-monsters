@@ -1,4 +1,5 @@
 import {
+    Body,
     CACHE_MANAGER,
     CacheInterceptor, CacheKey,
     CacheTTL,
@@ -37,14 +38,12 @@ export class MonstersController {
     }
 
     @Get('/eggs')
-    async getEggs() {
-        const defaultNumberOfEggs = 5
-        const defaultRate = 3
-        const [{min: minChallengeRating, max: maxChallengeRating}] = await this.monstersService.minMaxChallengeRating()
-        const range = (maxChallengeRating - minChallengeRating) / defaultNumberOfEggs
-        return [...Array(defaultNumberOfEggs)].map((el, i) => ({
-            range : `${i * range} - ${i * range + range}`,
-            price: (((i * range + range) + (i * range)) / 2) * defaultRate
-        }))
+    getEggs() {
+        return this.monstersService.getEggs()
+    }
+
+    @Post('/eggs')
+    getMonsters(@Body() levels : number[]) {
+        return this.monstersService.getRandomMonstersByLevels(levels)
     }
 }

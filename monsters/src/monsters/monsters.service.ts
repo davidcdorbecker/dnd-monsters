@@ -1,9 +1,11 @@
-import {Inject, Injectable, InternalServerErrorException} from '@nestjs/common';
+import {CACHE_MANAGER, Inject, Injectable, InternalServerErrorException} from '@nestjs/common';
 import {HttpService} from "@nestjs/axios";
 import {catchError, firstValueFrom,} from "rxjs";
 import {AxiosError} from "axios";
-import {Model, Types} from "mongoose";
+import {Model, Promise, Types} from "mongoose";
 import {Monster} from "./interfaces/monster.interface";
+import {Cache} from 'cache-manager';
+import {MONSTER_EGGS_KEY} from "../constants";
 
 const monstersAPI = 'https://www.dnd5eapi.co'
 
@@ -11,8 +13,8 @@ const monstersAPI = 'https://www.dnd5eapi.co'
 export class MonstersService {
     constructor(
         private readonly httpService: HttpService,
-        @Inject('MONSTER_MODEL')
-        private monsterModel: Model<Monster>
+        @Inject('MONSTER_MODEL') private repo: Model<Monster>,
+        @Inject(CACHE_MANAGER) private chacheManager: Cache
     ) {
     }
 
@@ -31,20 +33,26 @@ export class MonstersService {
         const data = await Promise.allSettled(monstersURL)
         return data
             .filter((x): x is PromiseFulfilledResult<Partial<{ data: Object }>> => x.status === "fulfilled")
-            .map(x => new this.monsterModel(x.value.data))
+            .map(x => new this.repo(x.value.data))
     }
 
     async replace(monsters: Monster[]) {
-        await this.monsterModel.deleteMany({})
-        this.monsterModel.bulkSave(monsters)
+        await this.repo.deleteMany({})
+        await this.repo.bulkSave(monsters)
     }
 
     findOne(objectId: Types.ObjectId) {
-        return this.monsterModel.findById(objectId)
+        return this.repo.findById(objectId)
     }
 
-    minMaxChallengeRating() {
-        return this.monsterModel.aggregate([
+    async getEggs() {
+        let eggs = await this.chacheManager.get(MONSTER_EGGS_KEY)
+        if (eggs !== null) {
+            // return eggs
+        }
+        const defaultNumberOfEggs = 5
+        const defaultRate = 3
+        const [{min: minChallengeRating, max: maxChallengeRating}] = await this.repo.aggregate([
             {
                 '$group': {
                     "_id": null,
@@ -53,5 +61,27 @@ export class MonstersService {
                 }
             }
         ])
+        const range = (maxChallengeRating - minChallengeRating) / defaultNumberOfEggs
+        eggs = [...Array(defaultNumberOfEggs)].map((el, i) => ({
+            minLevel : i * range,
+            maxLevel: i * range + range-1,
+            price: (((i * range + range) + (i * range)) / 2) * defaultRate
+        }))
+        await this.chacheManager.set(MONSTER_EGGS_KEY, eggs, 60*60)
+        return eggs
+    }
+
+    async getRandomMonstersByLevels(levels: number[]) {
+        const eggs = await this.getEggs()
+        const buildPipeline = (({minLevel, maxLevel}) => ([{
+            $match: {
+                "challenge_rating": {
+                    $gte: minLevel,
+                    $lte: maxLevel
+                }
+            }
+        }, {$sample: {size: 1}}]))
+        const aggregates = levels.map(level => this.repo.aggregate(buildPipeline(eggs[level])))
+        return (await Promise.all(aggregates)).flat()
     }
 }

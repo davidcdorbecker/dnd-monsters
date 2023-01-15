@@ -5,15 +5,21 @@ import {AppService} from "./app.service";
 import {DatabaseModule} from './database/database.module';
 import {APP_INTERCEPTOR} from "@nestjs/core";
 import * as redisStore from 'cache-manager-redis-store';
+import {ConfigModule} from "@nestjs/config";
 
 @Module({
-    imports: [MonstersModule, DatabaseModule, CacheModule.register({
-        isGlobal: true,
-        store: redisStore,
-        host: `${!process.env.environment ? 'localhost': 'redis'}`,
-        port: 6379,
-        ttl: 60
-    })],
+    imports: [
+        MonstersModule,
+        DatabaseModule,
+        CacheModule.register({
+            isGlobal: true,
+            store: redisStore,
+            host: process.env.REDIS_HOST,
+            port: +process.env.REDIS_PORT,
+            ttl: 60
+        }),
+        ConfigModule.forRoot({isGlobal: true})
+    ],
     controllers: [AppController],
     providers: [AppService, {
         provide: APP_INTERCEPTOR,
