@@ -2,7 +2,7 @@ name: Monsters API CI
 
 on:
   push:
-    branches: [master]
+    branches: ["master"]
     paths: 
       - 'monsters/**'
   pull_request:
