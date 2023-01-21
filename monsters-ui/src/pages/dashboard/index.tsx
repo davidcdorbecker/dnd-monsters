@@ -5,14 +5,12 @@ import {UserData} from "../../models/user_data";
 import Header from "./header";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import {Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {Container} from "@mui/material";
 import MonstersSection from "./monsters";
 import {Egg} from "../../models/eggs_store";
 import EggsSection from "./eggs";
-import Button from "@mui/material/Button";
 import TransactionDialog from "./transaction-dialog";
 import TransactionsSection from "./transactions";
-import Transactions from "./transactions";
 import {Transaction} from "../../models/transaction";
 import AuthService from "../../services/auth.service";
 

@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import {MonetizationOn} from "@mui/icons-material";
 import Box from "@mui/material/Box";
-import {sign} from "crypto";
 
 
 interface HeaderProps {

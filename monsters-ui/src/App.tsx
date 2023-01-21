@@ -10,6 +10,7 @@ function App() {
 
     useEffect(() => {
         AuthService.getCurrentUser() ? navigate('/dashboard') : navigate('/login')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
