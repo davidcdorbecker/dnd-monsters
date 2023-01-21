@@ -3,7 +3,6 @@ import {Test, TestingModule} from "@nestjs/testing";
 import {HttpService} from "@nestjs/axios";
 import {createMock} from "@golevelup/ts-jest";
 import {getModelToken} from "@nestjs/mongoose";
-import {Model} from "mongoose";
 import {CACHE_MANAGER} from "@nestjs/common";
 import {MONSTER_MODEL} from "../constants";
 
