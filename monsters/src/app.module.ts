@@ -2,15 +2,21 @@ import {CacheInterceptor, CacheModule, Module} from '@nestjs/common';
 import {AppController} from './app.controller';
 import {MonstersModule} from './monsters/monsters.module';
 import {AppService} from "./app.service";
-import {DatabaseModule} from './database/database.module';
 import {APP_INTERCEPTOR} from "@nestjs/core";
 import * as redisStore from 'cache-manager-redis-store';
-import {ConfigModule} from "@nestjs/config";
+import {ConfigModule, ConfigService} from "@nestjs/config";
+import {MongooseModule} from "@nestjs/mongoose";
 
 @Module({
     imports: [
         MonstersModule,
-        DatabaseModule,
+        MongooseModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                uri: `mongodb://${configService.get('MONGO_HOST')}:${configService.get('MONGO_PORT')}/monsters-db`
+            })
+        }),
         CacheModule.register({
             isGlobal: true,
             store: redisStore,

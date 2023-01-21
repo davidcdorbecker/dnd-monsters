@@ -3,9 +3,10 @@ import {HttpService} from "@nestjs/axios";
 import {catchError, firstValueFrom,} from "rxjs";
 import {AxiosError} from "axios";
 import {Model, Promise, Types} from "mongoose";
-import {Monster} from "./interfaces/monster.interface";
+import {Monster} from "./monster.interface";
 import {Cache} from 'cache-manager';
-import {MONSTER_EGGS_KEY} from "../constants";
+import {MONSTER_EGGS_KEY, MONSTER_MODEL} from "../constants";
+import {InjectModel} from "@nestjs/mongoose";
 
 const monstersAPI = 'https://www.dnd5eapi.co'
 
@@ -13,7 +14,7 @@ const monstersAPI = 'https://www.dnd5eapi.co'
 export class MonstersService {
     constructor(
         private readonly httpService: HttpService,
-        @Inject('MONSTER_MODEL') private repo: Model<Monster>,
+        @InjectModel(MONSTER_MODEL) private repo: Model<Monster>,
         @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) {
     }
