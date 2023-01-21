@@ -7,11 +7,12 @@ import {AuthModule} from "../auth/auth.module";
 import {UserMonsters} from "../users/user_monsters.entity";
 import {UsersService} from "../users/users.service";
 import {User} from "../users/user.entity";
+import {HttpModule} from "@nestjs/axios";
 
 @Module({
     controllers: [TransactionsController],
     providers: [TransactionsService, UsersService],
-    imports: [TypeOrmModule.forFeature([Transaction, UserMonsters, User]), AuthModule],
+    imports: [TypeOrmModule.forFeature([Transaction, UserMonsters, User]), AuthModule, HttpModule],
     exports: [TransactionsService]
 })
 export class TransactionsModule {

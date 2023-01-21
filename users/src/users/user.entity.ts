@@ -1,6 +1,7 @@
-import {AfterInsert, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {AfterInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {UserMonsters} from "./user_monsters.entity";
 import {Transaction} from "../transactions/transaction.entity";
+import {Exclude} from "class-transformer";
 
 @Entity()
 export class User {
@@ -11,6 +12,7 @@ export class User {
     email: string
 
     @Column()
+    @Exclude()
     password: string
 
     @Column()

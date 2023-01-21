@@ -103,6 +103,8 @@ services:
       - POSTGRES_USERNAME=postgres
       - KAFKA_HOST=kafka
       - KAFKA_PORT=9093
+      - MONSTERS_HOST=monsters
+      - MONSTERS_PORT=8001
     volumes:
       - ~/tmp/npm:/root/.npm:z
       - ~/monsters/src:/usr/src/app/src:z
@@ -128,8 +130,23 @@ services:
     networks:
       - app-net
     depends_on:
-      - zookeeper
-      - kafka
-      - postgres
+      - users
+      - monsters
+
+  monsters-ui:
+    image: monsters-ui
+    container_name: monsters-ui
+    build:
+      context: ./monsters-ui
+    environment:
+#      - REACT_APP_MONSTERS_API_HOST=monsters
+      - REACT_APP_MONSTERS_API_PORT=8001
+#      - REACT_APP_USERS_API_HOST=users
+      - REACT_APP_USERS_API_PORT=8002
+    ports:
+      - 3000:3000
+#    networks:
+#      - app-net
+    depends_on:
       - users
       - monsters

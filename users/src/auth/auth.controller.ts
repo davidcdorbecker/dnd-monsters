@@ -14,7 +14,7 @@ export class AuthController {
     @Post('/signup')
     async signup(@Body() body: CreateUserDTO) {
         const {name, email, password} = body
-        await this.authService.signup(email, password, name)
+        return await this.authService.signup(email, password, name)
     }
 
     @UseGuards(AuthGuard('local'))

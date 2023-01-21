@@ -13,7 +13,6 @@ import {
 import {MonstersService} from "./monsters.service";
 import {Types} from "mongoose";
 
-@UseInterceptors(CacheInterceptor)
 @Controller('monsters')
 export class MonstersController {
     constructor(
@@ -24,10 +23,10 @@ export class MonstersController {
     @Post('/refresh')
     async refreshDB() {
         const monsters = await this.monstersService.getFromAPI()
-        return this.monstersService.replace(monsters)
+        return this.monstersService.replace(monsters.filter(m => m.image))
     }
 
-
+    // @UseInterceptors(CacheInterceptor)
     @Get('/byId/:id')
     async findMonster(@Param('id') id: string) {
         const monster = await this.monstersService.findOne(new Types.ObjectId(id))
@@ -37,6 +36,7 @@ export class MonstersController {
         return monster
     }
 
+    // @UseInterceptors(CacheInterceptor)
     @Get('/eggs')
     getEggs() {
         return this.monstersService.getEggs()

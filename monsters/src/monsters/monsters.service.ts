@@ -14,7 +14,7 @@ export class MonstersService {
     constructor(
         private readonly httpService: HttpService,
         @Inject('MONSTER_MODEL') private repo: Model<Monster>,
-        @Inject(CACHE_MANAGER) private chacheManager: Cache
+        @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) {
     }
 
@@ -46,9 +46,9 @@ export class MonstersService {
     }
 
     async getEggs() {
-        let eggs = await this.chacheManager.get(MONSTER_EGGS_KEY)
+        let eggs = await this.cacheManager.get(MONSTER_EGGS_KEY)
         if (eggs !== null) {
-            // return eggs
+            return eggs
         }
         const defaultNumberOfEggs = 5
         const defaultRate = 3
@@ -62,22 +62,23 @@ export class MonstersService {
             }
         ])
         const range = (maxChallengeRating - minChallengeRating) / defaultNumberOfEggs
-        eggs = [...Array(defaultNumberOfEggs)].map((el, i) => ({
-            minLevel : i * range,
-            maxLevel: i * range + range-1,
-            price: (((i * range + range) + (i * range)) / 2) * defaultRate
+        eggs = [...Array(defaultNumberOfEggs)].map((el, i, {length}) => ({
+            minLevel: Math.round(i * range),
+            maxLevel: i !== length - 1 ? Math.round(i * range + range - 1) : Math.round(i * range + range),
+            price: Math.round((((i * range + range) + (i * range)) / 2) * defaultRate),
+            level: i
         }))
-        await this.chacheManager.set(MONSTER_EGGS_KEY, eggs, 60*60)
+        await this.cacheManager.set(MONSTER_EGGS_KEY, eggs, 60 * 60)
         return eggs
     }
 
     async getRandomMonstersByLevels(levels: number[]) {
         const eggs = await this.getEggs()
         const buildPipeline = (({minLevel, maxLevel}) => ([{
-            $match: {
+            "$match": {
                 "challenge_rating": {
-                    $gte: minLevel,
-                    $lte: maxLevel
+                    $gte: +minLevel,
+                    $lte: +maxLevel
                 }
             }
         }, {$sample: {size: 1}}]))

@@ -31,6 +31,7 @@ export module Process {
                 monster_id: monsters[i]
             }))
 
+            console.log(`${JSON.stringify(messages)}}`)
             await processTransactions(messages)
             console.log(`${messages.length} transactions successfully processed`)
         } catch (e) {

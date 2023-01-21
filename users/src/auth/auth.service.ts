@@ -17,11 +17,12 @@ export class AuthService {
 
         const salt = 10
         const hashedPassword = await bcrypt.hash(password, salt)
-        return await this.usersService.create(email, hashedPassword, name)
+        await this.usersService.create(email, hashedPassword, name)
+        return this.login(email)
     }
 
     async validateUser(email: string, password: string): Promise<any> {
-        const user = await this.usersService.find(email);
+        const user = await this.usersService.findByEmail(email);
         if (!user) return null;
         const passwordValid = await bcrypt.compare(password, user.password)
         if (!user) {
@@ -34,12 +35,12 @@ export class AuthService {
     }
 
     async checkUser(email: string)/*: Promise<boolean>*/ {
-        const user = await this.usersService.find(email)
+        const user = await this.usersService.findByEmail(email)
         return !!user
     }
 
     async login(email: string) {
-        const {id} = await this.usersService.find(email)
+        const {id} = await this.usersService.findByEmail(email)
         return {
             access_token: this.jwtService.sign({
                 id,
