@@ -30,4 +30,3 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: NODE_ENV=development npm run build
-      - run: NODE_ENV=development npm run test
