@@ -2,12 +2,14 @@ name: Monsters API CI
 
 on:
   push:
-    branches: [master]
+    branches: [ "master" ]
     paths: 
       - 'monsters/**'
   pull_request:
     types: [opened, reopened, synchronize]
-    branches: [master]
+    branches: [ "master" ]
+    paths: 
+      - 'monsters/**'
 
 jobs:
   build:
