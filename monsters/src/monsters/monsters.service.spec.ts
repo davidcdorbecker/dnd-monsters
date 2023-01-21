@@ -37,6 +37,7 @@ describe('only for testing CI', () => {
     });
 
     it('should be defined', () => {
-        expect(service).toBeDefined();
+        // expect(service).toBeDefined();
+        expect(service).toBeNaN();
     });
 })
