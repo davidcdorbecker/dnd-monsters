@@ -43,9 +43,9 @@ This microservice system allows multiple users to trade monsters. It has the fol
 - Signup / Signin
 - Authentication handling with JWT
 - Dashboard to navigate between the different sections
-- Monsters: See the monsters hatched
-- Eggs: See the catalog of eggs and buy them
-- Transactions: View transaction history
+  - Monsters: See the monsters hatched
+  - Eggs: See the catalog of eggs and buy them
+  - Transactions: View transaction history
 
 ### High level diagram
 <img src="assets/high-level-diagram.png" width="400" height="300">
