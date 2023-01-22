@@ -28,8 +28,8 @@ This microservice system allows multiple users to trade monsters. It has the fol
 - Creation and authentication of users via JWT
 - Create and complete transactions asynchronously
 - Listen for Kafka's topics:
-- finalize-transaction: complete a pending transaction
-- inject-credits: Inject credits defined in the kafka message to all users
+  - finalize-transaction: complete a pending transaction
+  - inject-credits: Inject credits defined in the kafka message to all users
 - Because in this service it is desired to handle ACID transactions by the algorithm of completing a credit transaction, PostgresDB was chosen as the database
 
 ### Cron Service
