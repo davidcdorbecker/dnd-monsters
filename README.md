@@ -48,7 +48,7 @@ This microservice system allows multiple users to trade monsters. It has the fol
 - Transactions: View transaction history
 
 ### High level diagram
-![image](https://user-images.githubusercontent.com/28693387/213931885-3ddcee13-0294-4231-8106-fff739da0532.png)
+<img src="assets/high-level-diagram.png" width="400" height="300">
 
 ## Instructions for running locally
 
@@ -60,3 +60,48 @@ Use Docker Compose to start the microservies application:
 
 A web page is now available:
 `http://127.0.0.1:3000`
+
+## Demo
+
+User sing up
+
+<img src="assets/sin-up.png" width="400" height="200">
+
+The user starts with 200 credits and no monsters
+
+<img src="assets/initial-page.png" width="400" height="150">
+
+The user can consult the egg catalog in the eggs section and buy some
+
+<img src="assets/eggs.png" width="400" height="150">
+
+For example, when trying to buy a level 2 egg that corresponds to a monster in the range of levels 8 to 12, a confirmation dialog appears.
+
+<img src="assets/dialog.png" width="400" height="150">
+
+By accepting the dialogue the credits decrease to 168 since the level 2 egg cost 32
+
+<img src="assets/money-decrease.png" width="400" height="150">
+
+In the transactions section the user can see the pending transaction
+
+<img src="assets/transaction.png" width="400" height="150">
+
+In the container logs we can see the asynchronous communication of cron with kafka and kafka with the user microservice
+
+<img src="assets/container-logs.png" width="400" height="150">
+
+After a minute the user can see the transaction finished
+
+<img src="assets/transaction-finished.png" width="400" height="150">
+
+and the monster born
+
+<img src="assets/got monster.png" width="400" height="150">
+
+## Next steps
+
+- Mount the application on Kubernetes
+- Write more unit tests
+- Improve CI / CD
+- Write the documentation of the APIs with swagger
