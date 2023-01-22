@@ -66,7 +66,7 @@ Fill the monsters db (one-time operation):
 
 A web page is now available:
 
-`http://127.0.0.1:3000`
+`http://localhost:3000`
 
 ## Demo
 
