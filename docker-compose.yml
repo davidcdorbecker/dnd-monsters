@@ -133,16 +133,16 @@ services:
       - users
       - monsters
 
-#  monsters-ui:
-#    image: monsters-ui
-#    container_name: monsters-ui
-#    build:
-#      context: ./monsters-ui
-#    environment:
-#      - REACT_APP_MONSTERS_API_PORT=8001
-#      - REACT_APP_USERS_API_PORT=8002
-#    ports:
-#      - 3000:3000
-#    depends_on:
-#      - users
-#      - monsters
+  monsters-ui:
+    image: monsters-ui
+    container_name: monsters-ui
+    build:
+      context: ./monsters-ui
+    environment:
+      - REACT_APP_MONSTERS_API_PORT=8001
+      - REACT_APP_USERS_API_PORT=8002
+    ports:
+      - 3000:3000
+    depends_on:
+      - users
+      - monsters
