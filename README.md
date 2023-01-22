@@ -8,7 +8,7 @@ This microservice system allows multiple users to trade monsters. It has the fol
 - User authentication via JWT
 - Users can buy monster eggs of different levels which correspond to various ranks of monsters
 - Eggs hatch approximately one minute after they are purchased
-- Users have 200 credits initially and every hour they receive 1 credit
+- Users have 200 credits initially and every hour they receive 10 credits
 - Users can view their hatched monsters and their transactions
 
 ## System architecture
@@ -36,7 +36,7 @@ This microservice system allows multiple users to trade monsters. It has the fol
 - Cron job written in nodejs
 - It has two main processes
 - Process pending transactions: requests the Users Service for pending transactions with more than 1 minute of creation and publishes messages to the finalize-transaction topic. This process runs every 30 seconds
-- Inject credits: Publish the amount of 1 credit to the kafka topic inject-credits. This process runs every hour
+- Inject credits: Publish the amount of 10 credits to the kafka topic inject-credits. This process runs every hour
 
 ### Monsters UI
 - User interface written in React with typescript'
