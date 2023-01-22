@@ -13,16 +13,27 @@ interface AxiosUserDataResponse {
 class UsersService {
     async getUserData() {
         try {
-            const {data: userData} = await jwtInterceptor.get(USERS_API+'/users') as AxiosUserDataResponse
+            const {data: userData} = await jwtInterceptor.get(USERS_API + '/users') as AxiosUserDataResponse
             console.log(userData)
             const monstersRequest = userData.monsters.map(({monster_id}) => axios({
                 method: 'GET',
                 url: `${MONSTERS_API}/byId/${monster_id}`
             }))
-            userData.monsters = (await Promise.all(monstersRequest)).map(res => res.data) as any[]
+            userData.monsters = (await Promise.all(monstersRequest))
+                .map(res => res.data)
+                .reduce((acc, curr) => {
+                    const {monsters, cache} = acc
+                    if (cache[curr._id] !== undefined) {
+                        monsters[cache[curr._id]].count++
+                        return acc
+                    }
+                    monsters.push({...curr, count: 1})
+                    cache[curr._id] = monsters.length - 1
+                    return acc
+                }, {monsters: [], cache: {}}).monsters as any[]
             return userData
         } catch (e) {
-            console.log(e)
+            console.error(e)
         }
     }
 
@@ -40,7 +51,7 @@ class UsersService {
     }
 
     doTransaction(eggLevel: number) {
-        return jwtInterceptor.post(USERS_API + '/transactions',  {
+        return jwtInterceptor.post(USERS_API + '/transactions', {
             egg_level: eggLevel
         })
     }

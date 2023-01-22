@@ -12,6 +12,7 @@ interface FeaturedPostProps {
         image: string;
         imageLabel: string;
         title: string;
+        count: number;
     };
 }
 
@@ -23,8 +24,8 @@ export default function MonsterCard(props: FeaturedPostProps) {
             <CardActionArea component="a">
                 <Card sx={{display: 'flex', height: '22rem', flexDirection: 'column'}}>
                     <CardContent sx={{width: '100%'}}>
-                        <Typography component="h2" variant="h5">
-                            {post.title}
+                        <Typography component="h2" variant="h6">
+                            {post.title} {post.count > 1 && `(${post.count})`}
                         </Typography>
                         <Typography variant="subtitle2" color="text.secondary">
                             {post.size}

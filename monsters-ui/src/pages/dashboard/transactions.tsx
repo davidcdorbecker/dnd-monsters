@@ -5,8 +5,12 @@ import CardContent from "@mui/material/CardContent";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import React from "react";
+import {useOutletContext} from "react-router-dom";
 
-const TransactionsSection = ({transactions}: { transactions: Transaction[] }) => {
+const TransactionsSection = () => {
+
+    const {transactions} = useOutletContext<{ transactions: Transaction[] }>()
+
     return (
         <Box>
             <List>

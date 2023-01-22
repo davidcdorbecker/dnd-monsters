@@ -1,13 +1,17 @@
 import React from 'react'
-import {Egg} from "../../models/eggs_store";
-import EggImage from '../../static/egg.png'
+import {Egg} from "../../../models/eggs_store";
+import EggImage from '../../../static/egg.png'
 import Box from "@mui/material/Box";
 import CardActionArea from '@mui/material/CardActionArea';
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import {useOutletContext} from "react-router-dom";
 
-const EggsSection = ({eggs, open}: { eggs: Egg[], open: any }) => {
+const EggsSection = () => {
+
+    const {eggs, open} = useOutletContext<{ eggs: Egg[], open: any }>()
+
     return (
         <>
             {

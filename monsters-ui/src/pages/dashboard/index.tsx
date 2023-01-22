@@ -8,11 +8,12 @@ import CssBaseline from "@mui/material/CssBaseline";
 import {Container} from "@mui/material";
 import MonstersSection from "./monsters";
 import {Egg} from "../../models/eggs_store";
-import EggsSection from "./eggs";
+import EggsSection from "./eggs/eggs";
 import TransactionDialog from "./transaction-dialog";
 import TransactionsSection from "./transactions";
 import {Transaction} from "../../models/transaction";
 import AuthService from "../../services/auth.service";
+import {Route, Routes, useLocation, useMatch, Outlet} from 'react-router-dom'
 
 const theme = createTheme({
     palette: {
@@ -32,24 +33,18 @@ export default function ProfilePage() {
     const [userData, setUserData] = useState<UserData>()
     const [openDialog, setOpenDialog] = useState(false)
     const [eggs, setEggs] = useState<Egg[]>()
-    const [currSection, setCurrSection] = useState(Section.Monsters)
     const [selectedEgg, setSelectedEgg] = useState<Egg | null>(null)
     const [transactions, setTransactions] = useState<Transaction[]>([])
 
     useEffect(() => {
         (async () => {
             const userData = await UsersService.getUserData()
-            console.log(userData!.monsters)
-            console.log(JSON.stringify(userData))
             setUserData(userData)
             setEggs(await UsersService.getEggs())
+            //TODO: return transactions in userData to avoid this call
             setTransactions(await UsersService.getTransactions(userData!.id))
         })()
     }, [])
-
-    const handleSection = (section: number) => {
-        setCurrSection(section)
-    }
 
     const handleOpenTransactionDialog = (egg: Egg) => {
         setSelectedEgg(egg)
@@ -80,9 +75,10 @@ export default function ProfilePage() {
     }
     const headerProps = {
         sections: [
-            {title: 'Monsters'},
-            {title: 'Buy eggs'},
-            {title: 'Transactions'}
+            {title: 'Monsters', to: '/monsters'},
+            {title: 'Incubator', to: '/monsters'},
+            {title: 'Buy eggs', to: '/eggs'},
+            {title: 'Transactions', to: '/transactions'}
         ],
         title: 'Monsters  trading panel'
     };
@@ -91,12 +87,16 @@ export default function ProfilePage() {
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             <Container maxWidth="lg">
-                <Header {...headerProps} credits={userData?.credits || 0} handleSection={handleSection} signout={signout}/>
-                {userData && eggs && [
-                    <MonstersSection monsters={userData!.monsters}/>,
-                    <EggsSection eggs={eggs} open={handleOpenTransactionDialog}/>,
-                    <TransactionsSection transactions={transactions}/>
-                ][currSection]}
+                <Header {...headerProps} credits={userData?.credits || 0}
+                        signout={signout}/>
+                {userData && eggs &&
+                    <Outlet context={{
+                        monsters: userData!.monsters,
+                        open: handleOpenTransactionDialog,
+                        eggs: eggs,
+                        transactions: transactions
+                    }}/>
+                }
             </Container>
             <TransactionDialog open={openDialog} close={handleCloseTransactionDialog}
                                confirm={handleConfirmTransaction}/>

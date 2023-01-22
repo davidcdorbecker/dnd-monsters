@@ -2,22 +2,25 @@ import * as React from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
+import MaterialLink from '@mui/material/Link';
 import {MonetizationOn} from "@mui/icons-material";
 import Box from "@mui/material/Box";
+import {useNavigate} from "react-router-dom";
 
 
 interface HeaderProps {
     sections: ReadonlyArray<{
         title: string;
+        to: string
     }>;
     title: string;
     credits: number;
-    handleSection: (section: number) => any,
     signout: () => void
 }
 
-export default function Header({sections, title, credits, handleSection, signout}: HeaderProps) {
+export default function Header({sections, title, credits, signout}: HeaderProps) {
+    const navigate = useNavigate()
+
     return (
         <React.Fragment>
             <Toolbar sx={{borderBottom: 1, borderColor: 'divider'}}>
@@ -52,18 +55,18 @@ export default function Header({sections, title, credits, handleSection, signout
                 variant="dense"
                 sx={{justifyContent: 'space-between', overflowX: 'auto'}}
             >
-                {sections.map((section, i) => (
-                    <Link
+                {sections.map((section) => (
+                    <MaterialLink
                         color="inherit"
                         noWrap
                         key={section.title}
                         variant="body2"
                         fontSize={20}
                         sx={{p: 1, flexShrink: 0, cursor: 'pointer'}}
-                        onClick={() => handleSection(i)}
+                        onClick={() => navigate('/dashboard' + section.to)}
                     >
                         {section.title}
-                    </Link>
+                    </MaterialLink>
                 ))}
             </Toolbar>
         </React.Fragment>
