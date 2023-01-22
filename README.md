@@ -20,7 +20,7 @@ This microservice system allows multiple users to trade monsters. It has the fol
 - Fill the database with monsters with available images obtained through the API http://www.dnd5eapi.co/
 - Create a catalog of eggs based on the available levels of monsters
 - Due to the fact that most of the fields only want to be saved without any specific structure, MongoDB was chosen as the database since it is of the document type
-- It has a cache layer for reading endpoints (monster queries, egg catalog)
+- It has a cache layer (Redis) for reading endpoints (monster queries, egg catalog)
 
 ### User Service
 - Written in nodejs using the Nestjs framework
