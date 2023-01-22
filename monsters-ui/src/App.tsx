@@ -4,9 +4,9 @@ import {Routes, Route, useNavigate} from "react-router-dom";
 import ProfilePage from "./pages/dashboard";
 import AuthService from "./services/auth.service";
 import SignupPage from "./pages/signup";
-import MonstersSection from "./pages/dashboard/monsters";
+import MonstersSection from "./pages/dashboard/monsters/monsters";
 import EggsSection from "./pages/dashboard/eggs/eggs";
-import TransactionsSection from "./pages/dashboard/transactions";
+import TransactionsSection from "./pages/dashboard/transactions/transactions";
 
 function App() {
     const navigate = useNavigate()

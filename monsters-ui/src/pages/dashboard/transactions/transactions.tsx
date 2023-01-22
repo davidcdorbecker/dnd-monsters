@@ -1,4 +1,4 @@
-import {Transaction} from "../../models/transaction";
+import {Transaction} from "../../../models/transaction";
 import {List, ListItem} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
@@ -27,7 +27,7 @@ const TransactionsSection = () => {
                                 <Typography>${t.credits}</Typography>
                             </CardContent>
                             <CardContent sx={{flex: 1}}>
-                                <Typography>Egg level ${t.egg_level}</Typography>
+                                <Typography>Egg level {t.egg_level}</Typography>
                             </CardContent>
                         </Card>
                     </ListItem>

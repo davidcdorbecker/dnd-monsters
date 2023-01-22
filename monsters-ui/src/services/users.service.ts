@@ -31,6 +31,7 @@ class UsersService {
                     cache[curr._id] = monsters.length - 1
                     return acc
                 }, {monsters: [], cache: {}}).monsters as any[]
+            userData.transactions = await this.getTransactions(userData.id)
             return userData
         } catch (e) {
             console.error(e)
@@ -50,10 +51,11 @@ class UsersService {
         return data as Transaction[]
     }
 
-    doTransaction(eggLevel: number) {
-        return jwtInterceptor.post(USERS_API + '/transactions', {
+    async doTransaction(eggLevel: number) {
+        const {data} = await jwtInterceptor.post(USERS_API + '/transactions', {
             egg_level: eggLevel
         })
+        return data as Transaction
     }
 }
 

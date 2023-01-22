@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Egg} from "../../../models/eggs_store";
 import EggImage from '../../../static/egg.png'
 import Box from "@mui/material/Box";
@@ -7,17 +7,38 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import {useOutletContext} from "react-router-dom";
+import TransactionDialog from "./transaction-dialog";
 
 const EggsSection = () => {
 
-    const {eggs, open} = useOutletContext<{ eggs: Egg[], open: any }>()
+    const {eggs, handleConfirmTransaction} = useOutletContext<{ eggs: Egg[], handleConfirmTransaction: any }>()
+
+    const [selectedEgg, setSelectedEgg] = useState<Egg | null>(null)
+    const [openDialog, setOpenDialog] = useState(false)
+
+
+    const handleOpenTransactionDialog = (egg: Egg) => {
+        setSelectedEgg(egg)
+        setOpenDialog(true)
+    }
+
+    const handleCloseTransactionDialog = () => {
+        setSelectedEgg(null)
+        setOpenDialog(false)
+    }
+
+    const handleConfirmDialog = () => {
+        handleConfirmTransaction(selectedEgg)
+        setSelectedEgg(null)
+        setOpenDialog(false)
+    }
 
     return (
         <>
             {
                 eggs.map((egg) =>
                     <CardActionArea component="a">
-                        <Box onClick={() => open(egg)}>
+                        <Box onClick={() => handleOpenTransactionDialog(egg)}>
                             <Card sx={{display: 'flex', flexDirection: 'row', marginBottom: '6px'}}>
                                 <CardContent sx={{flex: 1}}>
                                     <Box
@@ -42,6 +63,8 @@ const EggsSection = () => {
                         </Box>
                     </CardActionArea>)
             }
+            <TransactionDialog open={openDialog} close={handleCloseTransactionDialog}
+                               confirm={handleConfirmDialog}/>
         </>
     )
 }

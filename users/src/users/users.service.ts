@@ -21,7 +21,12 @@ export class UsersService {
         return this.userRepo.findOne({where: {email}})
     }
 
-    async findById(id: number) {
+    findById(id: number) {
         return this.userRepo.findOne({relations: ['monsters'], where: {id}})
+    }
+
+    async injectCreditsToAll(credits: number) {
+        const users = (await this.userRepo.find()).map(user => ({...user, credits: user.credits += credits})).map(user => this.userRepo.save(user))
+        return Promise.allSettled(users)
     }
 }

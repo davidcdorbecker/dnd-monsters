@@ -15,7 +15,7 @@ interface ProcessTransactionMessage {
 }
 
 export module Process {
-    export const run = async () => {
+    export const runPendingTransactions = async () => {
         console.log('Processing pending transactions job')
 
         try {
@@ -32,8 +32,17 @@ export module Process {
             }))
 
             console.log(`${JSON.stringify(messages)}}`)
-            await processTransactions(messages)
+            await produceKafkaMessages(messages, 'finalize-transaction')
             console.log(`${messages.length} transactions successfully processed`)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    export const runInjectCredits = async () => {
+        console.log('Processing inject credits job')
+        try {
+            await produceKafkaMessages([{credits: 10}], 'inject-credits')
         } catch (e) {
             console.error(e)
         }
@@ -57,14 +66,14 @@ const getRandomMonsters = async (data: number[]) => {
     return response.data as unknown as any[]
 }
 
-const processTransactions = async (messages: ProcessTransactionMessage[]) => {
+const produceKafkaMessages = async(messages: any[], topic: string) => {
     const kafka = KafkaProducer.getInstance();
     if (!kafka.isConnected) {
         await kafka.connect();
     }
 
     const producers = messages.map(message => kafka.producer.send({
-        topic: 'finalize-transaction',
+        topic,
         messages: [
             {
                 value: JSON.stringify(message),

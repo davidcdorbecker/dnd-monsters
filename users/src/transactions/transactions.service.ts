@@ -48,6 +48,7 @@ export class TransactionsService {
             await queryRunner.manager.getRepository(User).save(user)
             await queryRunner.manager.getRepository(Transaction).save(transaction)
             await queryRunner.commitTransaction()
+            return transaction
         } catch (e) {
             await queryRunner.rollbackTransaction()
             throw new InternalServerErrorException(e)
@@ -61,7 +62,7 @@ export class TransactionsService {
     }
 
     findByUserId(userId: number) {
-        return this.transactionsRepo.find({where: {user: {id: userId}}})
+        return this.transactionsRepo.find({where: {user: {id: userId}}, order: {created_at: {direction: "DESC"}}})
     }
 
     async process(transaction_id: number, monster_id: string) {

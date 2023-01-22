@@ -33,7 +33,7 @@ export class TransactionsController {
 
     @MessagePattern('finalize-transaction')
     // @UsePipes(new ValidationPipe())
-    async readMessage(@Payload() message: ProcessTransactionDTO) {
+    async processTransaction(@Payload() message: ProcessTransactionDTO) {
         const {transaction_id, monster_id} = message
         try {
             await this.transactionsService.process(transaction_id, monster_id)
