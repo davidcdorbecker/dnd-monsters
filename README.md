@@ -35,8 +35,8 @@ This microservice system allows multiple users to trade monsters. It has the fol
 ### Cron Service
 - Cron job written in nodejs
 - It has two main processes
-- Process pending transactions: requests the Users Service for pending transactions with more than 1 minute of creation and publishes messages to the finalize-transaction topic. This process runs every 30 seconds
-- Inject credits: Publish the amount of 10 credits to the kafka topic inject-credits. This process runs every hour
+  - Process pending transactions: requests the Users Service for pending transactions with more than 1 minute of creation and publishes messages to the finalize-transaction topic. This process runs every 30 seconds
+  - Inject credits: Publish the amount of 10 credits to the kafka topic inject-credits. This process runs every hour
 
 ### Monsters UI
 - User interface written in React with typescript'
