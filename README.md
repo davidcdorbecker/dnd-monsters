@@ -53,12 +53,15 @@ This microservice system allows multiple users to trade monsters. It has the fol
 ## Instructions for running locally
 
 Clone the repo: 
+
 `git clone https://github.com/davidcdorbecker/dnd-monsters.git`
 
 Use Docker Compose to start the microservies application:
+
 `docker compose up --build`
 
 A web page is now available:
+
 `http://127.0.0.1:3000`
 
 ## Demo
