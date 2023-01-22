@@ -60,6 +60,10 @@ Use Docker Compose to start the microservies application:
 
 `docker compose up --build`
 
+Fill the monsters db (one-time operation):
+
+`curl --location --request POST 'localhost:8001/monsters/refresh'`
+
 A web page is now available:
 
 `http://127.0.0.1:3000`
